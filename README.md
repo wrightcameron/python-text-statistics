@@ -3,7 +3,7 @@
 
 ## Overview
 
-The python text statistics project simply gets statistics based on the imputed text files. This project is simple, so simple its used for teaching computer science in a college 121 class. Why am I redoing a beginner level cs project? Well I am using the text statistics as a base for me to run those functions using multi threading or muli process. I have just wrapped up the text statistics itself so next will be incorporating the multi threading. This project doesn't need multi threading, the functions themselves are inefficient due to isolation, but they are isolated to project race stack variables for eventual threading. 
+The python text statistics project simply gets statistics based on the imputed text files. This project is simple, so simple its used for teaching computer science in a college 121 class. Why am I redoing a beginner level cs project? Well I am using the text statistics as a base for me to run those functions using multi threading or muli process. I have just wrapped up the text statistics itself so next will be incorporating the multithreading. This project doesn't need multithreading, the functions themselves are inefficient due to isolation, but they are isolated to protect against race conditions for eventual threading. 
  
 ## Usage
 
@@ -22,4 +22,8 @@ TODO
 
 
 ## Helpful Resources
-TODO
+Here are some useful articles that have helped me through this project.
+* [RegExr](https://regexr.com/)
+* [ArgParse Tutorial](https://docs.python.org/3/howto/argparse.html)
+* [Getting Started With Testing in Python](https://realpython.com/python-testing/)
+* [Socket Programming in Python (Guide)](https://realpython.com/python-sockets/)
