@@ -93,5 +93,19 @@ class UnitTestTextStatistics(unittest.TestCase):
         expected = {'m': 2, 'o': 5, 'n': 2, 'd':1, 'g':1}
         self.assertDictEqual(actual, expected)
 
+    def test_avgWordLength(self):
+        # Average should be 3.5
+        wordLengths = {3: 1, 4: 1}
+        self.testStatistics.wordLengths = wordLengths
+        expected = 3.5
+        actual = self.testStatistics.avgWordLength
+        self.assertEqual(expected, actual)
+        # Average should be 2.475
+        wordLengths = {1:10, 2:15, 3:7, 4:3, 5:4, 6:1}
+        self.testStatistics.wordLengths = wordLengths
+        expected = 2.475
+        actual = self.testStatistics.avgWordLength
+        self.assertEqual(expected, actual)
+
 if __name__ == '__main__':
     unittest.main()
