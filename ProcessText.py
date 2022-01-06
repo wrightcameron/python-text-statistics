@@ -12,6 +12,7 @@ def runTextStatistics(files: list):
     for f in files:
          w = TextStatistics()
          w.run(f)
+         print(w)
 
 # Entry point file for running Text Statistics from Command Line
 if __name__ == "__main__":

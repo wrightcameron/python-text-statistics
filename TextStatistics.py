@@ -15,7 +15,17 @@ class TextStatistics:
         self.wordFrequency = {}
         
 
-    def run(self, fileName: str, printResults: bool = True) -> None:
+    def collectStatistics(self, text: str) -> None:
+        self.lineCount += self.countLine(text.strip('\n'))
+        self.wordCount += self.countWords(text)
+        self.letterCount += self.countLetters(text)
+        self.charCount += self.countChars(text)
+
+        self.letterFrequency = self.countLetterFrequency(text, self.letterFrequency)
+        self.wordLengths = self.countWordLengths(text, self.wordLengths)
+        self.wordFrequency = self.countWordFrequency(text, self.wordFrequency)
+    
+    def run(self, fileName: str) -> None:
         """Run through all text statistics collected, line by line.  Stores all statistics in global
         variables, then prints those statistics to console.
 
@@ -34,9 +44,6 @@ class TextStatistics:
                 self.letterFrequency = self.countLetterFrequency(line, self.letterFrequency)
                 self.wordLengths = self.countWordLengths(line, self.wordLengths)
                 self.wordFrequency = self.countWordFrequency(line, self.wordFrequency)
-        if printResults:
-            self.fileName = fileName
-            self.printResults()
 
     def countChars(self, line: str) -> int:
         """Count characters in string
@@ -175,30 +182,31 @@ class TextStatistics:
             i += v
         return sum / i
     
-    def printResults(self) -> None:
-        """prints the results of all text statistics done on text
+    def __str__(self):
+        """Results of all text statistics done on text
+
+        Returns:
+            [type]: String of statistics
         """
-        print("Statistics for {}".format(self.fileName))
-        print("==========================================================")
-        print("{} lines".format(self.lineCount))
-        print("{} words".format(self.wordCount))
-        print("{} letters".format(self.letterCount))
-        print("{} characters".format(self.charCount))
-        print("------------------------------")
+        output = "Statistics for {}\n".format(self.fileName)
+        output += "==========================================================\n"
+
+        output += "{} lines\n".format(self.lineCount)
+        output += "{} words\n".format(self.wordCount)
+        output += "{} letters\n".format(self.letterCount)
+        output += "{} characters\n".format(self.charCount)
+        output += "------------------------------"
         # Count of each letter
-        output = ""
         sortedKeys = sorted(self.letterFrequency)
         for i in sortedKeys:
             output += "{} = {}\n".format(i, self.letterFrequency[i])
-        print(output)
-        print("------------------------------")
+        output += "------------------------------\n"
         # Length of each word
-        print("length frequency")
-        print("------ ---------")
-        output = ""
+        output += "length frequency\n"
+        output += "------ ---------\n"
         sortedKeys = sorted(self.wordLengths)
         for i in sortedKeys:
             output += "{} \t{}\n".format(i,self.wordLengths[i])
-        print(output)
-        print("Average word length = {:.2f}".format(self.avgWordLength))
-        print("==========================================================")
+        output += "Average word length = {:.2f}\n".format(self.avgWordLength)
+        output += "==========================================================\n"
+        return output
