@@ -1,10 +1,13 @@
 import re
+import json
 
 class TextStatistics:
 
     fileName = None;
 
     def __init__(self) -> None:
+        """Constructor for TextStatistics object
+        """
         self.wordCount = 0
         self.charCount = 0
         self.letterCount = 0
@@ -16,6 +19,11 @@ class TextStatistics:
         
 
     def collectStatistics(self, text: str) -> None:
+        """Instead of opening a file, collect text statistics on text passed in.
+
+        Args:
+            text (str): string of words, characters, etc
+        """
         self.lineCount += self.countLine(text.strip('\n'))
         self.wordCount += self.countWords(text)
         self.letterCount += self.countLetters(text)
@@ -182,31 +190,45 @@ class TextStatistics:
             i += v
         return sum / i
     
+    def returnStatsAsJSON(self) -> str:
+        """Instead of returning the results as a string, get statistics as json
+
+        Returns:
+            str: JSON string
+        """
+        output = {}
+        output['lineCount'] = self.lineCount
+        output['wordCount'] = self.wordCount
+        output['letterCount'] = self.letterCount
+        output['charCount'] = self.charCount
+        #TODO add the rest of the counts
+        return json.dumps(output)
+        
     def __str__(self):
         """Results of all text statistics done on text
 
         Returns:
             [type]: String of statistics
         """
-        output = "Statistics for {}\n".format(self.fileName)
+        output = f"Statistics for {self.fileName}\n".format(self.fileName)
         output += "==========================================================\n"
 
-        output += "{} lines\n".format(self.lineCount)
-        output += "{} words\n".format(self.wordCount)
-        output += "{} letters\n".format(self.letterCount)
-        output += "{} characters\n".format(self.charCount)
+        output += f"{self.lineCount} lines\n"
+        output += f"{self.wordCount} words\n"
+        output += f"{self.letterCount} letters\n"
+        output += f"{self.charCount} characters\n"
         output += "------------------------------"
         # Count of each letter
         sortedKeys = sorted(self.letterFrequency)
         for i in sortedKeys:
-            output += "{} = {}\n".format(i, self.letterFrequency[i])
+            output += f"{i} = {self.letterFrequency}\n"
         output += "------------------------------\n"
         # Length of each word
         output += "length frequency\n"
         output += "------ ---------\n"
         sortedKeys = sorted(self.wordLengths)
         for i in sortedKeys:
-            output += "{} \t{}\n".format(i,self.wordLengths[i])
+            output += f"{i} \t{self.wordLengths}\n"
         output += "Average word length = {:.2f}\n".format(self.avgWordLength)
         output += "==========================================================\n"
         return output
