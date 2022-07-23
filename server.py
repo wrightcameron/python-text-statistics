@@ -10,10 +10,17 @@ PORT = 65432
 # and just send the response back to the client
 # client sends nothing.
 
+def processText(text: str):
+    teststats = TextStatistics()
+    teststats.collectStatistics(text)
+    res = teststats.returnStatsAsJSON()
+    return res
+
 def run(host: str, port: int):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
-        s.settimeout(10)
+        # TODO This time out is not needed
+        #s.settimeout(10)
         s.listen()
         # TODO Add host and port to this print message
         print('Server is up. Listening for connections...')
@@ -24,17 +31,14 @@ def run(host: str, port: int):
             text = ""
             while True:
                 msg = conn.recv(1024)
-                print("here", len(msg))
+                # If message length is less than 1024, it could be last line
                 if not msg or len(msg) < 1024:
                     if msg:
                         text += msg.decode('utf-8')
                     # Hit end of line
                     break
                 text += msg.decode('utf-8')
-            # print(f"Client sent message path: { text }")
-            teststats = TextStatistics()
-            teststats.collectStatistics(text)
-            res = teststats.returnStatsAsJSON()
+            res = processText(text)
             print(f"Client object {conn}")
             conn.sendall(res.encode('utf-8'))
             # TODO Need to exit gracefully tell server we don't need the port
