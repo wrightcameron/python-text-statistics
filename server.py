@@ -1,24 +1,20 @@
 import socket
 import argparse
+import tempfile
 from TextStatistics import TextStatistics
 
 HOST = "127.0.0.1"
 PORT = 65432
 
 
-def processText(text: str):
-    teststats = TextStatistics()
-    teststats.collectStatistics(text)
-    res = teststats.returnStatsAsJSON()
-    return res
-
-
 def run(host: str, port: int):
+    # TODO Check if this can be captured in a with statement
+    # TODO Setup this server so it can exit gracefully, so the OS opens up the port
     # Create a TCP/IP socket.
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Bind the socket to the port.
-    server_address = ('localhost', 65432)
+    server_address = (host, port)
     print('starting up on {} port {}'.format(*server_address))
 
     sock.bind(server_address)
@@ -32,21 +28,21 @@ def run(host: str, port: int):
         conn, client_address = sock.accept()
         try:
             print('connection from', client_address)
-            f = open('file.txt','wb') # open in binary
-            while True:
-                # New
-                msg = conn.recv(1024)
-                # If message length is less than 1024, it could be last line
-                if not msg or len(msg) < 1024:
-                    if msg:
-                        f.write(msg)
-                    # Hit end of line
-                    break
-                f.write(msg)
-            f.close()
-            # File recieved, now need to pass files to ProcessText
-            with open('file.txt', 'r') as file:
-                contents = file.read()
+            with tempfile.TemporaryFile() as tempFile:
+                while True:
+                    # New
+                    msg = conn.recv(1024)
+                    # If message length is less than 1024, it could be last line
+                    if not msg or len(msg) < 1024:
+                        if msg:
+                            tempFile.write(msg)
+                        # Hit end of line
+                        break
+                    tempFile.write(msg)
+                tempFile.seek(0)
+                # File recieved, now need to pass files to ProcessText
+                contents = tempFile.read().decode('utf-8')
+                print(f"Contents of file are {contents}")
                 response = processText(contents)
                 if response:
                     conn.sendall(response.encode('utf-8'))
@@ -54,6 +50,13 @@ def run(host: str, port: int):
             # Clean up the connection.
             conn.close()
         print("Finished")
+
+
+def processText(text: str):
+    teststats = TextStatistics()
+    teststats.collectStatistics(text)
+    res = teststats.returnStatsAsJSON()
+    return res
 
 
 if __name__ == "__main__":
