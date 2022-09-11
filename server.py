@@ -22,7 +22,6 @@ def run(host: str, port: int):
 
         while True:
             # Wait for a connection.
-            print('waiting for a connection')
             conn, client_address = sock.accept()
             try:
                 print('connection from', client_address)
@@ -39,7 +38,6 @@ def run(host: str, port: int):
                     tempFile.seek(0)
                     # File recieved, now need to pass files to ProcessText
                     contents = tempFile.read().decode('utf-8')
-                    print(f"Contents of file are {contents}")
                     response = processText(contents)
                     if response:
                         conn.sendall(response.encode('utf-8'))
