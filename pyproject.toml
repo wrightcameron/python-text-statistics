@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "python-text-statistics"
+version = "0.1.0"
+description = "A text statistics project used for practicing python sockets."
+authors = ["Cameron Wright <ccameronwright@gmail.com>"]
+readme = "README.md"
+packages = [{include = "python_text_statistics"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+argparse = "^1.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
