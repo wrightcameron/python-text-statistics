@@ -1,111 +1,114 @@
-import unittest
+import pytest
+from unittest import TestCase
 import sys
 
-sys.path.append('..')
+sys.path.append("..")
 from TextStatistics import TextStatistics
 
-class UnitTestTextStatistics(unittest.TestCase):
 
-    def setUp(self):
-        self.testStatistics = TextStatistics()
+class TestTextStatistics:
+    # Given
+    # When
+    # Then
 
-    def test_countChars(self):
-        #Nominal case
+    @pytest.fixture
+    def textStat(self):
+        return TextStatistics()
+
+    def test_countChars(self, textStat):
+        # Nominal case
         msg = "this line of letters is 32 chars"
-        actual = self.testStatistics.countChars(msg)
-        self.assertEqual(actual, 32)
+        actual = textStat.countChars(msg)
+        assert actual == 32
         # Empty case
         msg = ""
-        actual = self.testStatistics.countChars(msg)
-        self.assertEqual(actual, 0)
+        actual = textStat.countChars(msg)
+        assert actual == 0
         # Weird  chars
         msg = "\n\t\t\n"
-        actual = self.testStatistics.countChars(msg)
-        self.assertEqual(actual, 4)
-        #Check multiline
+        actual = textStat.countChars(msg)
+        assert actual == 4
+        # Check multiline
         msg = "this line of letters\nis 32 chars"
-        actual = self.testStatistics.countChars(msg)
-        self.assertEqual(actual, 32)
+        actual = textStat.countChars(msg)
+        assert actual == 32
 
-    def test_countWords(self):
+    def test_countWords(self, textStat):
         msg = "this message has 4 words"
-        actual = self.testStatistics.countWords(msg)
-        self.assertEqual(actual, 4)
+        actual = textStat.countWords(msg)
+        assert actual == 4
         # Empty Case
         msg = ""
-        actual = self.testStatistics.countWords(msg)
-        self.assertEqual(actual, 0)
-        #No words only numbers and special characters
+        actual = textStat.countWords(msg)
+        assert actual == 0
+        # No words only numbers and special characters
         msg = "1234 567 89 !@#"
-        actual = self.testStatistics.countWords(msg)
-        self.assertEqual(actual, 0)
+        actual = textStat.countWords(msg)
+        assert actual == 0
         # Check multiline
         msg = "this\nmessage\nhas\n4\nwords\n"
-        actual = self.testStatistics.countWords(msg)
-        self.assertEqual(actual, 4)
-    
-    def test_countLine(self):
+        actual = textStat.countWords(msg)
+        assert actual == 4
+
+    def test_countLine(self, textStat):
         msg = ""
-        actual = self.testStatistics.countLine(msg)
-        self.assertEqual(actual, 1)
+        actual = textStat.countLine(msg)
+        assert actual == 1
         # Multiple lines from \n
         msg = "\n\n\n"
-        actual = self.testStatistics.countLine(msg)
-        self.assertEqual(actual, 4)
+        actual = textStat.countLine(msg)
+        assert actual == 4
         # Multiple lines
         msg = """line 1
                 line 2"""
-        actual = self.testStatistics.countLine(msg)
-        self.assertEqual(actual, 2)
-    
-    def test_countLetters(self):
+        actual = textStat.countLine(msg)
+        assert actual == 2
+
+    def test_countLetters(self, textStat):
         msg = "this line has 18 letters"
-        actual = self.testStatistics.countLetters(msg)
-        self.assertEqual(actual, 18)
-        #Empty Case
+        actual = textStat.countLetters(msg)
+        assert actual == 18
+        # Empty Case
         msg = ""
-        actual = self.testStatistics.countLetters(msg)
-        self.assertEqual(actual, 0)
+        actual = textStat.countLetters(msg)
+        assert actual == 0
         # Just numbers no letters
         msg = "1234 567 89 !@#"
-        actual = self.testStatistics.countLetters(msg)
-        self.assertEqual(actual, 0)
+        actual = textStat.countLetters(msg)
+        assert actual == 0
         # Multi line
         msg = "this\nline\nhas\n18\nletters"
-        actual = self.testStatistics.countLetters(msg)
-        self.assertEqual(actual, 18)
+        actual = textStat.countLetters(msg)
+        assert actual == 18
 
-    def test_countWordLengths(self):
+    def test_countWordLengths(self, textStat):
         msg = "The dog jumped over the dim moon"
-        actual = self.testStatistics.countWordLengths(msg)
+        actual = textStat.countWordLengths(msg)
         expected = {3: 4, 4: 2, 6: 1}
-        self.assertDictEqual(actual, expected)
+        TestCase().assertDictEqual(actual, expected)
 
-    def test_countWordFrequency(self):
+    def test_countWordFrequency(self, textStat):
         msg = "Moon moon, dog, less, moon\n dog"
-        actual = self.testStatistics.countWordFrequency(msg)
+        actual = textStat.countWordFrequency(msg)
         expected = {"moon": 3, "dog": 2, "less": 1}
-        self.assertDictEqual(actual, expected)
+        TestCase().assertDictEqual(actual, expected)
 
-    def test_countLetterFrequency(self):
+    def test_countLetterFrequency(self, textStat):
         msg = "Moon moon, dog."
-        actual = self.testStatistics.countLetterFrequency(msg)
-        expected = {'m': 2, 'o': 5, 'n': 2, 'd':1, 'g':1}
-        self.assertDictEqual(actual, expected)
+        actual = textStat.countLetterFrequency(msg)
+        expected = {"m": 2, "o": 5, "n": 2, "d": 1, "g": 1}
+        TestCase().assertDictEqual(actual, expected)
 
-    def test_avgWordLength(self):
+    def test_avgWordLength(self, textStat):
         # Average should be 3.5
         wordLengths = {3: 1, 4: 1}
-        self.testStatistics.wordLengths = wordLengths
+        textStat.wordLengths = wordLengths
         expected = 3.5
-        actual = self.testStatistics.avgWordLength
-        self.assertEqual(expected, actual)
+        actual = textStat.avgWordLength
+        assert expected == actual
         # Average should be 2.475
-        wordLengths = {1:10, 2:15, 3:7, 4:3, 5:4, 6:1}
-        self.testStatistics.wordLengths = wordLengths
+        wordLengths = {1: 10, 2: 15, 3: 7, 4: 3, 5: 4, 6: 1}
+        textStat.wordLengths = wordLengths
         expected = 2.475
-        actual = self.testStatistics.avgWordLength
-        self.assertEqual(expected, actual)
-
-if __name__ == '__main__':
-    unittest.main()
+        actual = textStat.avgWordLength
+        assert expected == actual
