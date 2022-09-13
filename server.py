@@ -14,7 +14,7 @@ def run(host: str, port: int):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # Bind the socket to the port.
         server_address = (host, port)
-        print('starting up on {} port {}'.format(*server_address))
+        print("starting up on {} port {}".format(*server_address))
         sock.bind(server_address)
 
         # Listen for incoming connections.
@@ -24,7 +24,7 @@ def run(host: str, port: int):
             # Wait for a connection.
             conn, client_address = sock.accept()
             try:
-                print('connection from', client_address)
+                print("connection from", client_address)
                 with tempfile.TemporaryFile() as tempFile:
                     while True:
                         msg = conn.recv(1024)
@@ -37,10 +37,10 @@ def run(host: str, port: int):
                         tempFile.write(msg)
                     tempFile.seek(0)
                     # File recieved, now need to pass files to ProcessText
-                    contents = tempFile.read().decode('utf-8')
+                    contents = tempFile.read().decode("utf-8")
                     response = processText(contents)
                     if response:
-                        conn.sendall(response.encode('utf-8'))
+                        conn.sendall(response.encode("utf-8"))
             finally:
                 # Clean up the connection.
                 conn.close()
@@ -55,9 +55,13 @@ def processText(text: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='ProcessTextClient: Get test statistics from server')
-    parser.add_argument('-s', '--host', type=str, help='Server host/ip to connect too', default=HOST)
-    parser.add_argument('-p', '--port', type=int, help='Port number', default=PORT)
+    parser = argparse.ArgumentParser(
+        description="ProcessTextClient: Get test statistics from server"
+    )
+    parser.add_argument(
+        "-s", "--host", type=str, help="Server host/ip to connect too", default=HOST
+    )
+    parser.add_argument("-p", "--port", type=int, help="Port number", default=PORT)
     args = parser.parse_args()
 
     run(args.host, args.port)
